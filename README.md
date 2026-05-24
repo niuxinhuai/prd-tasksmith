@@ -20,9 +20,25 @@ PRD Tasksmith is local-first: without an API key it uses deterministic rules to 
 
 ## Install
 
+Install directly from GitHub while the package is not on PyPI yet:
+
+```bash
+pipx install git+https://github.com/niuxinhuai/prd-tasksmith.git
+```
+
+Or use pip:
+
+```bash
+python3 -m pip install git+https://github.com/niuxinhuai/prd-tasksmith.git
+```
+
+For local development:
+
 ```bash
 python3 -m pip install -e .
 ```
+
+You can also download built wheel and sdist files from the latest GitHub Release: https://github.com/niuxinhuai/prd-tasksmith/releases/latest
 
 ## Usage
 
@@ -61,7 +77,7 @@ python3 -m unittest discover -s tests
 
 ## Release
 
-Tagged releases build Python packages and create a GitHub Release through GitHub Actions. PyPI publishing is disabled by default; to enable it, configure PyPI Trusted Publishing for this repository and set the repository variable , then push a tag:
+Tagged releases build Python packages and create a GitHub Release through GitHub Actions. PyPI publishing is disabled by default; to enable it, configure PyPI Trusted Publishing for this repository and set the repository variable `PUBLISH_TO_PYPI=true`, then push a tag:
 
 ```bash
 git tag v0.1.0
