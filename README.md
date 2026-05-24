@@ -14,6 +14,7 @@ PRD Tasksmith is local-first: without an API key it uses deterministic rules to 
 
 - Extracts goals, owner hints, acceptance criteria, risks, and follow-up questions.
 - Supports Markdown task cards, GitHub issue drafts, Linear import drafts, Markdown tables, and JSON output.
+- Can split generated tasks into one Markdown issue draft per file with `--output-dir`.
 - Reads from a file or stdin.
 - Works with OpenAI-compatible providers through `AI_BASE_URL`, `AI_MODEL`, and `AI_API_KEY`.
 - Ships with tests and GitHub Actions CI.
@@ -47,8 +48,11 @@ prd-tasksmith examples/sample_prd.md
 prd-tasksmith examples/sample_prd.md --template github-issues
 prd-tasksmith examples/sample_prd.md --template markdown-table
 prd-tasksmith examples/sample_prd.md --format json
+prd-tasksmith examples/sample_prd.md --output-dir issue-drafts
 cat requirement.md | prd-tasksmith -
 ```
+
+`--output-dir` writes one numbered Markdown file per generated task, which is useful when you want to review, edit, or import issue drafts one by one.
 
 See generated examples in [`examples/output.md`](examples/output.md) and [`examples/output.json`](examples/output.json).
 

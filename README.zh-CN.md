@@ -14,6 +14,7 @@ PRD Tasksmith 是本地优先工具：没有 API Key 时会用规则生成可用
 
 - 提取目标、owner 建议、验收标准、风险和待确认问题
 - 支持任务卡、GitHub issue 草稿、Linear 导入草稿、Markdown 表格和 JSON 输出
+- 支持 `--output-dir` 将任务拆成多个 Markdown issue 草稿文件
 - 支持从文件或 stdin 读取
 - 支持 `AI_BASE_URL`、`AI_MODEL`、`AI_API_KEY`，不绑定具体模型厂商
 - 自带 unittest 测试和 GitHub Actions CI
@@ -47,8 +48,11 @@ prd-tasksmith examples/sample_prd.md
 prd-tasksmith examples/sample_prd.md --template github-issues
 prd-tasksmith examples/sample_prd.md --template markdown-table
 prd-tasksmith examples/sample_prd.md --format json
+prd-tasksmith examples/sample_prd.md --output-dir issue-drafts
 cat requirement.md | prd-tasksmith -
 ```
+
+`--output-dir` 会按任务生成编号 Markdown 文件，适合逐条检查、编辑或导入 issue。
 
 可以直接查看生成示例：[`examples/output.md`](examples/output.md) 和 [`examples/output.json`](examples/output.json)。
 

@@ -27,6 +27,12 @@ def write_text(path, text):
         handle.write(text)
 
 
+def safe_slug(text):
+    slug = re.sub(r"[^\w\u4e00-\u9fff-]+", "-", text.strip(), flags=re.UNICODE)
+    slug = re.sub(r"-+", "-", slug).strip("-").lower()
+    return slug or "task"
+
+
 def bullet_lines(text):
     lines = []
     for raw in text.splitlines():
@@ -136,6 +142,41 @@ def render_github_issues(plan):
     return "\n".join(output).rstrip() + "\n"
 
 
+def render_task_issue(task):
+    output = [
+        "# %s" % task["title"],
+        "",
+        "## Goal",
+        "",
+        task["goal"],
+        "",
+        "## Owner Hint",
+        "",
+        task["owner_hint"],
+        "",
+        "## Acceptance Criteria",
+        "",
+    ]
+    output.extend("- [ ] %s" % item for item in task["acceptance"])
+    output.extend(["", "## Risks", ""])
+    output.extend("- %s" % item for item in task["risks"])
+    output.append("")
+    return "\n".join(output)
+
+
+def write_task_files(plan, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    paths = []
+    for task in plan["tasks"]:
+        filename = "%02d-%s.md" % (task["id"], safe_slug(task["title"]))
+        path = os.path.join(output_dir, filename)
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(render_task_issue(task))
+        paths.append(path)
+    return paths
+
+
 def render_linear(plan):
     output = ["# Linear Import Draft", ""]
     for task in plan["tasks"]:
@@ -238,11 +279,17 @@ def main(argv=None):
     parser.add_argument("--model", help="Override AI_MODEL for --ai")
     parser.add_argument("--base-url", help="Override AI_BASE_URL for --ai")
     parser.add_argument("--output", help="Write result to a file instead of stdout")
+    parser.add_argument("--output-dir", help="Write one Markdown issue draft per task")
     parser.add_argument("--version", action="version", version="prd-tasksmith %s" % __version__)
     args = parser.parse_args(argv)
 
     source = read_text(args.input)
-    draft = heuristic_plan(source, args.format, args.template)
+    plan = build_tasks(source)
+    if args.output_dir:
+        paths = write_task_files(plan, args.output_dir)
+        sys.stdout.write("Wrote %d task file(s) to %s\n" % (len(paths), args.output_dir))
+        return
+    draft = json.dumps(plan, ensure_ascii=False, indent=2) + "\n" if args.format == "json" else render_markdown(plan, args.template)
     result = call_ai(source, draft, args.model, args.base_url) if args.ai else draft
     write_text(args.output, result)
 
