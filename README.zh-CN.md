@@ -1,5 +1,9 @@
 # PRD Tasksmith
 
+[![CI](https://github.com/niuxinhuai/prd-tasksmith/actions/workflows/ci.yml/badge.svg)](https://github.com/niuxinhuai/prd-tasksmith/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.7%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 [English](README.md)
 
 把 PRD、需求说明或会议纪要整理成开发任务卡。
@@ -9,7 +13,7 @@ PRD Tasksmith 是本地优先工具：没有 API Key 时会用规则生成可用
 ## 功能
 
 - 提取目标、owner 建议、验收标准、风险和待确认问题
-- 支持 Markdown 和 JSON 输出
+- 支持任务卡、GitHub issue 草稿、Linear 导入草稿、Markdown 表格和 JSON 输出
 - 支持从文件或 stdin 读取
 - 支持 `AI_BASE_URL`、`AI_MODEL`、`AI_API_KEY`，不绑定具体模型厂商
 - 自带 unittest 测试和 GitHub Actions CI
@@ -24,9 +28,13 @@ python3 -m pip install -e .
 
 ```bash
 prd-tasksmith examples/sample_prd.md
+prd-tasksmith examples/sample_prd.md --template github-issues
+prd-tasksmith examples/sample_prd.md --template markdown-table
 prd-tasksmith examples/sample_prd.md --format json
 cat requirement.md | prd-tasksmith -
 ```
+
+可以直接查看生成示例：[`examples/output.md`](examples/output.md) 和 [`examples/output.json`](examples/output.json)。
 
 启用 AI 润色：
 

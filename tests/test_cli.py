@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from prd_tasksmith.__main__ import build_tasks, heuristic_plan
+from prd_tasksmith.__main__ import build_tasks, heuristic_plan, render_markdown
 
 
 class PrdTasksmithTest(unittest.TestCase):
@@ -36,6 +36,12 @@ class PrdTasksmithTest(unittest.TestCase):
         plan = build_tasks(text)
         self.assertEqual(len(plan["tasks"]), 1)
         self.assertEqual(plan["tasks"][0]["acceptance"], ["提醒条出现"])
+
+    def test_markdown_table_template(self):
+        plan = build_tasks("# Demo\n需求：\n- 展示提醒条")
+        table = render_markdown(plan, template="markdown-table")
+        self.assertIn("| ID | Task | Owner | Risks |", table)
+        self.assertIn("| 1 | 展示提醒条 | frontend / app |", table)
 
 
 if __name__ == "__main__":
